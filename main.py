@@ -8,8 +8,8 @@ import pixoo as pixc
 
 load_dotenv("local.env", verbose=True)
 
-green = (0, 255, 0, 255)
-red = (150, 10, 10, 255)
+green = (50, 255, 50, 255)
+red = (150, 50, 50, 255)
 
 if __name__ == "__main__":
     bt_mac_addr = getenv("BT_MAC_ADDR")
@@ -45,7 +45,6 @@ if __name__ == "__main__":
     pixels = base.load()
     for pbx in range(width):
         pixels[pbx, 15] = (0, 0, 0, 255)
-        pixels[pbx, 14] = (180, 185, 200, 255)
 
     while True:  # Main loop - here you can change the drawing functions
         if (real_time > 5 or dt - t < 0):
@@ -60,7 +59,6 @@ if __name__ == "__main__":
 
             for pbx in range(width):
                 pixels[pbx, 15] = (0, 0, 0, 255)
-                pixels[pbx, 14] = (180, 185, 200, 255)
 
 
             dt = (song[1] - song[0]) / 1000.0
@@ -76,7 +74,6 @@ if __name__ == "__main__":
         while x / float(width) < (song[0] + t * 1000) / song[1]:
             if x > 16:
                 break
-            pixels[max(x - 1, 0), 14] = (180, 185, 200, 255)
             pixels[max(x - 1, 0), 15] = col
             x += 1
             
@@ -84,7 +81,8 @@ if __name__ == "__main__":
         calc = 16 * (song[0] + t * 1000) / song[1]
         pixel_progress = calc - int(calc)
         x = min(x, 16)
-        pixels[x - 1, 15] = (0, int(255 * pixel_progress), 0, 255)
+        if song[3]:
+            pixels[x - 1, 15] = (50, int(255 * pixel_progress), 50, 255)
 
         # workaround for final displaying
         base.save(tmp_folder + "tmp.png")
