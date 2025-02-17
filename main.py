@@ -89,7 +89,10 @@ if __name__ == "__main__":
 
         # workaround for final displaying
         base.save(tmp_folder + "tmp.png")
-        pixoo.draw_pic(tmp_folder + "tmp.png")
+        try: pixoo.draw_pic(tmp_folder + "tmp.png")
+        except Exception as e:
+            print(e)
+            pixoo.connect()
         sleep(0.1)  # 10 fps are already pretty smooth
         t += t_p
         real_time += 0.1
