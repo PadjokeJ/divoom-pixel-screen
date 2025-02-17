@@ -41,7 +41,7 @@ def plot_visualizer():
 
     for x in range(16):
         for y in range(16):
-            pixels[x, y] = (pixels[x, y][0] // 2,
+            pixels[x, y] = (int(pixels[x, y][0] // 1.2),
                             pixels[x, y][1],
                             pixels[x, y][0] // 4,
                             pixels[x, y][3])
@@ -50,7 +50,7 @@ def plot_visualizer():
     chunk_width =  20 #int(1001 / 16.0)
     for i in range(16):
         h = 0
-        chunk_width = int(2 ** (i / 3))
+        chunk_width = int(2 ** (i / 5)) * 10
         chunk_start = i * chunk_width
         for j in range(chunk_width):
             dat = (data[j + chunk_start + 100])
