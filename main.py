@@ -28,6 +28,8 @@ if __name__ == "__main__":
     
 
     song = spotify_reader.progress_bar()
+    previous_url = song[2]
+
     dt = (song[1] - song[0]) / 1000.0
     print(dt)
     t = 0
@@ -53,12 +55,12 @@ if __name__ == "__main__":
             song = spotify_reader.progress_bar()
 
             image_url = song[2]
-
-
-            base = Image.open(spotify_reader.album_cover(image_url))
-            if base.mode != 'RGBA': base = base.convert('RGBA')
-            base = base.resize((16, 16))
-            pixels = base.load()
+            if previous_url != image_url:
+                base = Image.open(spotify_reader.album_cover(image_url))
+                if base.mode != 'RGBA': base = base.convert('RGBA')
+                base = base.resize((16, 16))
+                pixels = base.load()
+            previous_url = image_url
 
             for pbx in range(width):
                 pixels[pbx, 15] = (0, 0, 0, 255)
