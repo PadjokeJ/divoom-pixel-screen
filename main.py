@@ -39,6 +39,8 @@ if __name__ == "__main__":
 
 
     base = Image.open(spotify_reader.album_cover(song[2]))
+    if base.mode != 'RGBA': base = base.convert('RGBA')
+    base.save(tmp_folder + "tmp.png")
     base = base.resize((16, 16))
 
     size = width, height = base.size
@@ -54,6 +56,7 @@ if __name__ == "__main__":
 
 
             base = Image.open(spotify_reader.album_cover(image_url))
+            if base.mode != 'RGBA': base = base.convert('RGBA')
             base = base.resize((16, 16))
             pixels = base.load()
 
