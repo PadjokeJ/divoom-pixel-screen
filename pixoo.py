@@ -206,15 +206,23 @@ class Pixoo(object):
       self.send(0x49, chunk+frames[i*200:(i+1)*200])
 
 
-  def draw_pic(self, filepath):
-    """
-    Draw encoded picture.
-    """
-    nb_colors, palette, pixel_data = self.encode_image(filepath)
+  def draw_pic(self, img_or_path):
+    if type(img_or_path) == str:
+      img = Image.open(img_or_path)
+    else:
+      img = img_or_path
+
+    self.draw_pic_from_PIL(img)
+  
+  def draw_pic_from_PIL(self, img : Image):
+    nb_colors, palette, pixel_data = self.encode_raw_image(img)
+
     frame_size = 7 + len(pixel_data) + len(palette)
     frame_header = [0xAA, frame_size&0xff, (frame_size>>8)&0xff, 0, 0, 0, nb_colors]
+
     frame = frame_header + palette + pixel_data
     prefix = [0x0, 0x0A,0x0A,0x04]
+
     self.send(0x44, prefix+frame)
 
 
