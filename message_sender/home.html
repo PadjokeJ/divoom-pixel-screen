@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MESSAGER</title>
+    </head>
+
+    <body style="text-align: center; ">
+        <div style="height: 60vh;justify-content: center; margin-top: 40vh;">
+            <p>ENTER A MESSAGE TO SEND</p>
+            <input id="message"><button id="send">SEND</button>
+        </div>
+    </body>
+
+    <script>
+        var element = document.getElementById("send");
+        element.addEventListener("click", function (e){
+            var message = document.getElementById("message").value;
+            var url = `http://localhost:5000/send?message=${message}`;
+            console.log(url);
+            const request = new Request(url);
+            fetch(request)
+                .then((response) => {
+                        if (response.status === 200) {
+                            console.log("message success!!");
+                            return response.json();
+                        } else {
+                            throw new Error("Something went wrong on API server!");
+                        }
+                    })
+                    .then((response) => {
+                        console.debug(response);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+                });
+    </script>
+</html>
