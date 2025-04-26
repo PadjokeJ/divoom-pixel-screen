@@ -2,6 +2,8 @@
 Pixoo
 
 Code taken from https://github.com/virtualabs/pixoo-client
+
+Slightly adapted and modified by PadjokeJ
 """
 
 import sys
