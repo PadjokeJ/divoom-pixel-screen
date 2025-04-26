@@ -1,7 +1,7 @@
 import requests
 from os import getenv
 from dotenv import load_dotenv
-load_dotenv("../../local.env", verbose=True)
+load_dotenv("local.env", verbose=True)
 from io import BytesIO
 
 hostname = "https://api.spotify.com/v1/"
@@ -50,11 +50,12 @@ def get_auth_from_user():
     # Open in browser, to log in to spotify
     webbrowser.open(response.url)
 
+
 def get_token():
     import requests
     redirect_uri = "http://localhost"
 
-    code = spotify_token
+    code = auth_code
     token_url = "https://accounts.spotify.com/api/token"
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     data = {"grant_type": "authorization_code", "code": code, "redirect_uri": redirect_uri}
@@ -68,7 +69,17 @@ def refresh_token():
     token_url = "https://accounts.spotify.com/api/token"
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     response = requests.post(token_url, headers=headers, data=f"grant_type=refresh_token&client_id={client_id}&client_secret={client_secret}&scope=user-read-playback-state user-modify-playback-state&refresh_token={auth_code}&redirect_uri=localhost:")
+    
+    print(response)
+    
     return response.json()["access_token"]
 
 if __name__ == "main":
-    print()
+    # do this first
+    get_auth_from_user()
+
+    #once you have gotten your token from your uri, run this
+    #get_token()
+
+    #once you need to regen a token, run this
+    refresh_token()

@@ -2,14 +2,54 @@ from os import getenv
 from time import sleep
 from PIL import Image
 from dotenv import load_dotenv
-import spotify_reader
 
+from spotify_reader import *
 import pixoo as pixc
 
 load_dotenv("local.env", verbose=True)
 
 green = (50, 255, 50, 255)
 red = (150, 50, 50, 255)
+
+dt = 0
+t = 0
+real_time = 0
+t_p = 0
+
+def render():
+    if (real_time > 5 or dt - t < 0):
+        song = progress_bar()
+        image_url = song[2]
+        if previous_url != image_url:
+            base = Image.open(album_cover(image_url))
+            if base.mode != 'RGBA': base = base.convert('RGBA')
+            base = base.resize((16, 16))
+            pixels = base.load()
+        previous_url = image_url
+        for pbx in range(width):
+            pixels[pbx, 15] = (0, 0, 0, 255)
+        dt = (song[1] - song[0]) / 1000.0
+        t = 0
+        real_time = 0
+        if song[3]: t_p = 0.1
+        else: t_p = 0
+        print(dt)
+    x = 0
+    if t_p == 0: col = red
+    else: col = green
+    while x / float(width) < (song[0] + t * 1000) / song[1]:
+        if x > 16:
+            break
+        pixels[max(x - 1, 0), 15] = col
+        x += 1
+        
+    calc = 16 * (song[0] + t * 1000) / song[1]
+    pixel_progress = calc - int(calc)
+    x = min(x, 16)
+    if song[3]:
+        pixels[x - 1, 15] = (50, int(255 * pixel_progress), 50, 255)
+    
+    return base
 
 if __name__ == "__main__":
     bt_mac_addr = getenv("BT_MAC_ADDR")
@@ -27,20 +67,16 @@ if __name__ == "__main__":
     
     
 
-    song = spotify_reader.progress_bar()
+    song = progress_bar()
     previous_url = song[2]
 
     dt = (song[1] - song[0]) / 1000.0
-    print(dt)
-    t = 0
-    real_time = 0
-
-    t_p = 0
+    
     if song[3]: t_p = 0.1
     else: t_p = 0
 
 
-    base = Image.open(spotify_reader.album_cover(song[2]))
+    base = Image.open(album_cover(song[2]))
     if base.mode != 'RGBA': base = base.convert('RGBA')
     base.save(tmp_folder + "tmp.png")
     base = base.resize((16, 16))
@@ -52,11 +88,11 @@ if __name__ == "__main__":
 
     while True:  # Main loop - here you can change the drawing functions
         if (real_time > 5 or dt - t < 0):
-            song = spotify_reader.progress_bar()
+            song = progress_bar()
 
             image_url = song[2]
             if previous_url != image_url:
-                base = Image.open(spotify_reader.album_cover(image_url))
+                base = Image.open(album_cover(image_url))
                 if base.mode != 'RGBA': base = base.convert('RGBA')
                 base = base.resize((16, 16))
                 pixels = base.load()
