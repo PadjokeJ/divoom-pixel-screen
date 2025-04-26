@@ -173,3 +173,7 @@ cython_debug/
 
 # PIL
 tmp.png
+
+# MINECRAFT SCRIPT
+
+plugins/minecraft/textures
