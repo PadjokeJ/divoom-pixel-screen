@@ -54,7 +54,7 @@ def get_token():
     import requests
     redirect_uri = "http://localhost"
 
-    code = "Base64 code obtained from get_auth_from_user()"
+    code = spotify_token
     token_url = "https://accounts.spotify.com/api/token"
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     data = {"grant_type": "authorization_code", "code": code, "redirect_uri": redirect_uri}
